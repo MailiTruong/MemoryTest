@@ -29,6 +29,7 @@
             border: 1px solid #ccc;
             margin-top: 5px;
             border-radius: 5px;
+            cursor: pointer; /* Change cursor to pointer */
         }
         #form {
             display: flex;
@@ -49,7 +50,12 @@
             <button @click="addParticipant">Add</button>
         </div>
         <div id="participants">
-            <div v-for="participant in participants" :key="participant.id" class="participant">
+            <div 
+                v-for="participant in participants" 
+                :key="participant.id" 
+                class="participant"
+                @click="showQuestions(participant.id)"
+            >
                 {{ participant.id }}: {{ participant.name }}
             </div>
         </div>
@@ -80,6 +86,28 @@
                     this.participantName = '' // Reset input field
                     await this.getParticipants() // Refresh the participant list
                 },
+                async showQuestions(participantId) {
+                    const answers = [];
+                    for (let i = 1; i <= 5; i++) {
+                        const answer = prompt(`Question ${i}: Please provide your answer.`);
+                        // Check if the answer is not null before pushing to the array
+                        if (answer !== null && answer.trim() !== "") {
+                            answers.push(answer.trim()); // Trim whitespace
+                        } else {
+                            alert("Answer cannot be empty. Please provide a valid answer.");
+                            return; // Exit the function if an answer is invalid
+                        }
+                    }
+                    // Check if we have exactly 5 answers
+                    if (answers.length === 5) {
+                        await axios.post(`${this.apiUrl}/participant/${participantId}/answers`, {
+                            answers: answers
+                        });
+                        alert("Answers saved successfully.");
+                    } else {
+                        alert("You must provide exactly 5 answers.");
+                    }
+                }
             },
         }).mount('#app')
     </script>
