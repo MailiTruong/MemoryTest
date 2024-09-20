@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Participant Management</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        #app {
+            width: 300px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        #participants {
+            margin-top: 20px;
+        }
+        .participant {
+            padding: 5px;
+            border: 1px solid #ccc;
+            margin-top: 5px;
+            border-radius: 5px;
+        }
+        #form {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h2>Participant Management</h2>
+        <div id="form">
+            <input
+                type="text"
+                placeholder="Participant Name"
+                v-model="participantName"
+            />
+            <button @click="addParticipant">Add</button>
+        </div>
+        <div id="participants">
+            <div v-for="participant in participants" :key="participant.id" class="participant">
+                {{ participant.id }}: {{ participant.name }}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue
+        createApp({
+            data() {
+                return {
+                    participantName: '',
+                    participants: [],
+                    apiUrl: window.location.toString().slice(0, -1), // Adjusted API URL
+                }
+            },
+            async mounted() {
+                await this.getParticipants()
+            },
+            methods: {
+                async getParticipants() {
+                    const response = await axios.get(`${this.apiUrl}/participant/list`)
+                    this.participants = response.data.participants
+                },
+                async addParticipant() {
+                    const response = await axios.post(`${this.apiUrl}/participant`, {
+                        name: this.participantName,
+                    })
+                    this.participantName = '' // Reset input field
+                    await this.getParticipants() // Refresh the participant list
+                },
+            },
+        }).mount('#app')
+    </script>
+</body>
+</html>
+
