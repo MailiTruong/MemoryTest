@@ -29,7 +29,15 @@
             border: 1px solid #ccc;
             margin-top: 5px;
             border-radius: 5px;
-            cursor: pointer; /* Change cursor to pointer */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .icon {
+            color: blue;
+            cursor: pointer;
+            margin-left: 10px;
         }
         #form {
             display: flex;
@@ -54,9 +62,11 @@
                 v-for="participant in participants" 
                 :key="participant.id" 
                 class="participant"
-                @click="showQuestions(participant.id)"
             >
-                {{ participant.id }}: {{ participant.name }}
+                <span @click="selectParticipant(participant.id)">
+                    {{ participant.id }}: {{ participant.name }}
+                </span>
+                <span class="icon" @click="showAnswers(participant.id)">📄</span>
             </div>
         </div>
     </div>
@@ -86,7 +96,7 @@
                     this.participantName = '' // Reset input field
                     await this.getParticipants() // Refresh the participant list
                 },
-                async showQuestions(participantId) {
+                async selectParticipant(participantId) {
                     const answers = [];
                     for (let i = 1; i <= 5; i++) {
                         const answer = prompt(`Question ${i}: Please provide your answer.`);
@@ -106,6 +116,15 @@
                         alert("Answers saved successfully.");
                     } else {
                         alert("You must provide exactly 5 answers.");
+                    }
+                },
+                async showAnswers(participantId) {
+                    const response = await axios.get(`${this.apiUrl}/participant/${participantId}/answers`)
+                    const answers = response.data.answers;
+                    if (answers && answers.length > 0) {
+                        alert(`Answers for Participant ${participantId}:\n` + answers.join("\n"));
+                    } else {
+                        alert("No answers available for this participant.");
                     }
                 }
             },
