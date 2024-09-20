@@ -29,26 +29,44 @@
             border: 1px solid #ccc;
             margin-top: 5px;
             border-radius: 5px;
+            cursor: pointer;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-        }
-        .icon {
-            color: blue;
-            cursor: pointer;
-            margin-left: 10px;
+            justify-content: space-between; /* Align items horizontally */
+            align-items: center; /* Center items vertically */
         }
         #form {
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
         }
+        .search-bar {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .recap-icon {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div id="app">
         <h2>Participant Management</h2>
+        <div class="search-bar">
+            <input
+                type="text"
+                placeholder="Search by name"
+                v-model="nameSearch"
+                @input="filterParticipants"
+            />
+        </div>
+        <div class="search-bar">
+            <input
+                type="text"
+                placeholder="Search by question"
+                v-model="questionSearch"
+                @input="searchAnswers"
+            />
+        </div>
         <div id="form">
             <input
                 type="text"
@@ -59,14 +77,14 @@
         </div>
         <div id="participants">
             <div 
-                v-for="participant in participants" 
+                v-for="participant in filteredParticipants" 
                 :key="participant.id" 
                 class="participant"
             >
-                <span @click="selectParticipant(participant.id)">
+                <span @click="showQuestions(participant.id)">
                     {{ participant.id }}: {{ participant.name }}
                 </span>
-                <span class="icon" @click="showAnswers(participant.id)">📄</span>
+                <span class="recap-icon" @click="showRecap(participant.id)">📋</span>
             </div>
         </div>
     </div>
@@ -78,16 +96,21 @@
                 return {
                     participantName: '',
                     participants: [],
-                    apiUrl: window.location.toString().slice(0, -1), // Adjusted API URL
+                    filteredParticipants: [],
+                    nameSearch: '',
+                    questionSearch: '',
+                    apiUrl: window.location.toString().slice(0, -1),
                 }
             },
             async mounted() {
                 await this.getParticipants()
+                this.filteredParticipants = this.participants; // Initialize filtered list
             },
             methods: {
                 async getParticipants() {
                     const response = await axios.get(`${this.apiUrl}/participant/list`)
                     this.participants = response.data.participants
+                    this.filteredParticipants = this.participants; // Initialize filtered list
                 },
                 async addParticipant() {
                     const response = await axios.post(`${this.apiUrl}/participant`, {
@@ -96,19 +119,17 @@
                     this.participantName = '' // Reset input field
                     await this.getParticipants() // Refresh the participant list
                 },
-                async selectParticipant(participantId) {
+                async showQuestions(participantId) {
                     const answers = [];
                     for (let i = 1; i <= 5; i++) {
                         const answer = prompt(`Question ${i}: Please provide your answer.`);
-                        // Check if the answer is not null before pushing to the array
                         if (answer !== null && answer.trim() !== "") {
-                            answers.push(answer.trim()); // Trim whitespace
+                            answers.push(answer.trim());
                         } else {
                             alert("Answer cannot be empty. Please provide a valid answer.");
-                            return; // Exit the function if an answer is invalid
+                            return;
                         }
                     }
-                    // Check if we have exactly 5 answers
                     if (answers.length === 5) {
                         await axios.post(`${this.apiUrl}/participant/${participantId}/answers`, {
                             answers: answers
@@ -118,13 +139,32 @@
                         alert("You must provide exactly 5 answers.");
                     }
                 },
-                async showAnswers(participantId) {
-                    const response = await axios.get(`${this.apiUrl}/participant/${participantId}/answers`)
-                    const answers = response.data.answers;
-                    if (answers && answers.length > 0) {
-                        alert(`Answers for Participant ${participantId}:\n` + answers.join("\n"));
+                filterParticipants() {
+                    this.filteredParticipants = this.participants.filter(participant =>
+                        participant.name.toLowerCase().includes(this.nameSearch.toLowerCase())
+                    );
+                },
+                async searchAnswers() {
+                    const questionNumber = parseInt(this.questionSearch);
+                    if (!isNaN(questionNumber) && questionNumber >= 1 && questionNumber <= 5) {
+                        const response = await axios.get(`${this.apiUrl}/answers/question/${questionNumber}`);
+                        const answers = response.data;
+                        alert(`Answers for Question ${questionNumber}: \n` + Object.entries(answers).map(([id, answer]) => `Participant ${id}: ${answer}`).join('\n'));
                     } else {
-                        alert("No answers available for this participant.");
+                        alert("Please enter a valid question number (1-5).");
+                    }
+                },
+                async showRecap(participantId) {
+                    try {
+                        const response = await axios.get(`${this.apiUrl}/answers/${participantId}`);
+                        const answers = response.data[participantId];
+                        if (answers.length > 0) {
+                            alert(`Recap for Participant ${participantId}:\n` + answers.join('\n'));
+                        } else {
+                            alert("No answers found for this participant.");
+                        }
+                    } catch (error) {
+                        alert("Error fetching recap data.");
                     }
                 }
             },
