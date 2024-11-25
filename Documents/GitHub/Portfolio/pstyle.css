@@ -1,0 +1,136 @@
+/* Global Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Body */
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: #222;
+    background-color: #f5f5f5;
+    overflow: auto; /* Prevent scrollbars */
+}
+
+/* Main Content */
+#main {
+    padding: 40px;
+    text-align: center;
+    overflow-y: auto; /* Allows scrolling if content overflows */
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 40px;
+    color: #222;
+}
+
+/* Project Grid */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 20px;
+    justify-items: center;
+}
+
+.project-preview {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    font-size: 1rem;
+    width: 100%; /* Ensure full width within grid cell */
+    max-width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Added shadow for better separation */
+    border-radius: 8px; /* Softer corners */
+    
+}
+
+#img-container{
+        overflow: hidden;
+        position: relative;
+}
+
+.project-preview img {
+        display: block;
+        aspect-ratio: 450 / 300;
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        object-position: center;
+        transition: transform 0.3s ease, filter 0.3s ease;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Added shadow for better separation */
+        border-radius: 8px; /* Softer corners */
+}
+
+.project-preview h2 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.project-preview p {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.project-preview a {
+    text-decoration: none;
+    color: #808080;
+    font-weight: bold;
+}
+
+.project-preview a:hover {
+    color: #C0C0C0;
+}
+
+.project-preview img:hover {
+        transform: scale(1.1);
+        filter: brightness(0.7);
+}
+
+.fact-preview {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 20px; /* Increased padding for a roomier feel */
+    text-align: center;
+    font-size: 1.2rem; /* Increased overall font size */
+    aspect-ratio: 450 / 300; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around; /* Distributes content evenly */
+    width: 100%; 
+    overflow: hidden;
+    max-width: 100%; /* Ensures it remains responsive */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Added shadow for better separation */
+    border-radius: 8px; /* Softer corners */
+}
+
+.fact-preview h2 {
+    font-size: 1.5rem; /* Larger heading size */
+    margin-bottom: 15px; /* Increased margin for more space */
+    color: #222; /* Darker color for better contrast */
+}
+
+.fact-preview p {
+    font-size: 1.1rem; /* Increased font size for readability */
+    line-height: 1.8; /* More spacing between lines */
+    color: #555;
+    margin-bottom: 20px; /* Added more space below the paragraph */
+}
+
+.fact-preview a {
+    font-size: 1.1rem; /* Increased font size for better visibility */
+    text-decoration: none;
+    color: #808080;
+    font-weight: bold;
+    transition: color 0.3s ease; /* Smooth hover effect */
+}
+
+.fact-preview a:hover {
+    color: #C0C0C0; /* Slightly lighter color on hover */
+}

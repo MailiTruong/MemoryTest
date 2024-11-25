@@ -1,0 +1,63 @@
+#toolbar-container {
+    position: fixed;
+    top: 0;
+    left: -250px; /* Initially hidden */
+    width: 250px;
+    height: 100%;
+    background-color: #fafafa; /* Subtle grey background */
+    border-right: 1px solid #eaeaea;
+    box-shadow: 3px 0 5px rgba(0, 0, 0, 0.1); /* Add a slight shadow */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    transition: left 0.3s ease-in-out; /* Smooth sliding effect */
+    z-index: 10; /* Ensure it’s on top of other elements */
+}
+
+#toolbar-content a {
+    text-decoration: none;
+    color: #555;
+    font-size: 16px;
+    margin: 15px 0;
+    transition: color 0.3s ease;
+}
+
+#toolbar-content a:hover {
+    color: #000; /* Darken text on hover */
+}
+
+#menu-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    z-index: 11; /* Above the toolbar */
+    transition: transform 0.2s ease;
+}
+
+#menu-toggle:hover {
+    transform: scale(1.1); /* Slight zoom on hover */
+}
+
+#link {
+    margin-top: 30px;
+}
+
+#link a {
+    text-decoration: none;
+    color: #808080;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+#link a:hover {
+    color: #C0C0C0;
+}
+
+

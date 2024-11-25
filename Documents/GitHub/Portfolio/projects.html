@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Projects</title>
+        <link href="pstyle.css" rel="stylesheet">
+        <link href="tstyle.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="toolbar-container">
+            <div id="toolbar-content">
+                <br>
+                <a href="homepage.html">Presentation</a><br><br>
+                <a href="projects.html">Projects</a><br><br>
+                <a href="aboutme.html">About Me</a>
+            </div>
+        </div>
+
+        <button id="menu-toggle" aria-label="Toggle menu">
+            ☰
+        </button>
+
+        <div id="main">
+            <h1>My Projects</h1>
+            <div id="projects-grid" class="grid-container"></div>
+        </div>
+        <script src="toolbar.js"></script>
+        <script src="generate_project.js"></script> 
+        <script>
+            function add_project_preview() 
+            {
+                const grid_container = document.getElementById("projects-grid");
+                projects.forEach((project) => {
+                    grid_container.innerHTML += project.create_preview();
+                });
+            }
+
+            document.addEventListener("DOMContentLoaded", add_project_preview);
+        </script>
+    </body>
+</html>
+
